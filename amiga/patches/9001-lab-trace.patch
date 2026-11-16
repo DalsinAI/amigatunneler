@@ -1,0 +1,19 @@
+diff -ru a/src/main.c b/src/main.c
+--- a/src/main.c	2026-11-16 21:32:22.466564303 +0000
++++ b/src/main.c	2026-11-16 21:32:22.491433471 +0000
+@@ -1049,6 +1049,7 @@
+ 		}
+ 		else
+ 		{
++		    { extern void tu_trace(const char *); tu_trace("menu quit"); }
+ 		    key_quit = 1;
+ 		}
+ 				
+@@ -1060,6 +1061,7 @@
+ 	}
+     }
+ 
++    { extern void tu_trace(const char *); tu_trace("main end, SDL_Quit"); SDL_Quit(); tu_trace("SDL_Quit back, return"); }
+     return( 0 );
+ }
+ 
