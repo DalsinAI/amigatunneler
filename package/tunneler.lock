@@ -1,0 +1,6 @@
+# The upstream SDL Tunneler the port builds: fetched at this commit by
+# package/build-amiga.sh, never kept in this repository.
+TUNNELER_URL=https://github.com/guyromm/tunneler
+TUNNELER_COMMIT=a49c95106e1018be6a9778078fa533ae0df87c20
+TUNNELER_VERSION=1.1.1
+PORT_VERSION=1.1.1-gfos1

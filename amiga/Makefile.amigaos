@@ -1,0 +1,75 @@
+# SDL Tunneler for GFOS (AmigaOS 3.2 with GFOpenUp), 68040/68060 + FPU, on
+# GFOpenUp's SDL 2 (LIBS:GFOpenGPU/SDL2.module) through the kit's
+# sdl12-compat, linked into the program.
+#
+#   make -f amiga/Makefile.amigaos -j4 TU=/path/to/tunneler [STOVE=/path/to/os32-gcc16-open6]
+#
+# TU is upstream SDL Tunneler at the commit package/tunneler.lock names,
+# with amiga/patches applied (package/build-amiga.sh fetches and patches
+# it). STOVE is a GFOpenAmigaGCC 16.2.0-open6 stove.
+#
+# Output: build/amigaos/Tunneler/ (the drawer: Tunneler, ReadMe, Controls,
+# upstream's README, the licences, with GlowIcons),
+# build/amigaos/Tunneler.info and Install-Tunneler beside them.
+
+TU      ?= ../tunneler
+STOVE   ?= $(HOME)/AmiCradle/stoves/os32-gcc16-open6
+PREFIX  ?= $(STOVE)/prefix
+SDL2KIT ?= $(PREFIX)/m68k-amigaos
+CC      = $(PREFIX)/bin/m68k-amigaos-gcc
+STRIP   = $(PREFIX)/bin/m68k-amigaos-strip
+CPU     ?= -m68040 -m68881
+# -fno-tree-loop-distribute-patterns: GCC 16's loop miscompile (the kit's
+# sdl2-config gives it for GCC 16 too). -fgnu89-inline: upstream's
+# "inline void CTest_Sub" is a 2004 GNU inline, with no other definition.
+OPT     ?= -O2 -fomit-frame-pointer -fno-tree-loop-distribute-patterns
+CFLAGS  = -noixemul $(OPT) $(CPU) -fgnu89-inline -D__amigaos__ -DHAVE_CONFIG_H \
+          -I$(TU)/src -I$(SDL2KIT)/include
+LDFLAGS = -noixemul $(CPU)
+# libSDL.a is sdl12-compat with SDL 2's own members inside
+LIBS    = -L$(SDL2KIT)/lib -lSDL -lSDL2 -lm
+
+BUILD   = build/amigaos
+OBJDIR  = $(BUILD)/obj
+OUT     = $(BUILD)/Tunneler
+PROG    = Tunneler
+
+SRC     = $(wildcard $(TU)/src/*.c)
+OBJS    = $(patsubst $(TU)/src/%.c,$(OBJDIR)/src/%.o,$(SRC)) $(OBJDIR)/amiga/amiga_start.o
+
+all: $(OUT)/$(PROG) package
+
+$(BUILD)/$(PROG).debug: $(OBJS)
+	@mkdir -p $(BUILD)
+	$(CC) $(LDFLAGS) -o $@ $(OBJS) $(LIBS)
+
+$(OUT)/$(PROG): $(BUILD)/$(PROG).debug
+	@mkdir -p $(OUT)
+	$(STRIP) -o $@ $<
+
+package: $(OUT)/$(PROG) AMIGA_PORT.md amiga/Licences.txt amiga/Controls
+	cp amiga/Controls $(OUT)/Controls
+	cp AMIGA_PORT.md $(OUT)/ReadMe
+	cp $(TU)/README $(OUT)/ReadMe-Tunneler
+	cp $(TU)/COPYING $(OUT)/COPYING.txt
+	cp amiga/Licences.txt $(OUT)/Licences.txt
+	mkdir -p $(OUT)/Licences
+	cp $(SDL2KIT)/share/GFOpenGPU-SDK/Licences/sdl12-compat.txt $(OUT)/Licences/
+	cp amiga/icons/Tunneler.info amiga/icons/ReadMe.info $(OUT)/
+	for f in ReadMe-Tunneler COPYING.txt Licences.txt Controls; do \
+	    cp amiga/icons/ReadMe.info $(OUT)/$$f.info; done
+	cp amiga/icons/Tunneler-drawer.info $(BUILD)/Tunneler.info
+	cp amiga/Install-Tunneler amiga/Install-Tunneler.info $(BUILD)/
+
+$(OBJDIR)/src/%.o: $(TU)/src/%.c $(wildcard $(TU)/src/*.h)
+	@mkdir -p $(dir $@)
+	$(CC) $(CFLAGS) -c -o $@ $<
+
+$(OBJDIR)/amiga/%.o: amiga/%.c
+	@mkdir -p $(dir $@)
+	$(CC) $(CFLAGS) -c -o $@ $<
+
+clean:
+	rm -rf $(BUILD)
+
+.PHONY: all package clean

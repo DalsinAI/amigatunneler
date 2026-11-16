@@ -1,0 +1,13 @@
+SDL Tunneler: licences
+======================
+
+The game: SDL Tunneler by Taneli Kalvas (2003-2008), after Geoffrey
+Silverton's Tunneler (1991), from https://github.com/guyromm/tunneler.
+
+- The program is under the GNU General Public License, version 2 or later
+  (COPYING.txt). It has no data files: its pictures are drawn by the
+  program.
+- sdl12-compat is linked into the program: Licences/sdl12-compat.txt.
+- The Amiga port's own files (amiga/, AMIGA_PORT.md, package/, tools/,
+  tests/) are GPL 2 or later, like the game; the GlowIcon art is The
+  AmiCradle Team's own.

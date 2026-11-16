@@ -1,0 +1,14 @@
+{
+  "name": "SDL Tunneler",
+  "version": "1.1.1-gfos1",
+  "drawer": "Tunneler",
+  "program": "Tunneler",
+  "cpu": "68040",
+  "fpu": true,
+  "space": 600000,
+  "modules": ["SDL2.module"],
+  "keep": ["Tunneler.prefs"],
+  "parent": "Work:Games",
+  "badge": "icons/art/tunneler.png",
+  "script": "Install-Tunneler"
+}

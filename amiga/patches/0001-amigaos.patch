@@ -1,0 +1,50 @@
+diff --git a/src/graphics.c b/src/graphics.c
+index 63480a2..89ca386 100644
+--- a/src/graphics.c
++++ b/src/graphics.c
+@@ -41,8 +41,14 @@ SDL_Rect **fs_modes;
+ SDL_Rect **win_modes;
+ 
+ int Video_fullscreen = 0;
++#if defined(__amigaos__)
++/* GFOS: a window that fits beside Workbench and keeps a 68040 quick */
++int Video_X = 640;
++int Video_Y = 480;
++#else
+ int Video_X = 800;
+ int Video_Y = 600;
++#endif
+ 
+ 
+ void Init_Font( void )
+diff --git a/src/main.c b/src/main.c
+index 52c118d..65f1a84 100644
+--- a/src/main.c
++++ b/src/main.c
+@@ -88,7 +88,11 @@ void Read_Config( void )
+     char buf[256];
+     char *home;
+ 
+-#ifndef WIN32
++#if defined(__amigaos__)
++    /* GFOS: the settings are kept in the game's drawer */
++    (void)home;
++    conffile = "PROGDIR:Tunneler.prefs";
++#elif !defined(WIN32)
+     home = getenv( "HOME" );
+     if( home == NULL ) {
+ 	printf( "Environment variable HOME not defined!\n" );
+@@ -852,6 +856,13 @@ int main( int argc, char *argv[] )
+     int j;
+     int i = 1;
+ 
++#if defined(__amigaos__)
++    /* A Workbench start has no arguments: argc is 0 and argv the
++     * WBStartup message, which the loop below must not read. */
++    static char *wb_argv[] = { "Tunneler", NULL };
++    if( argc == 0 )
++	argv = wb_argv;
++#endif
+     argv0 = argv[0];
+     Read_Config();
+ 

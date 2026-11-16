@@ -1,0 +1,28 @@
+SDL Tunneler: the keys
+======================
+
+Two players, one keyboard, a split screen. Each drives a tank through
+the earth: find the other tank and destroy it. Driving through earth is
+slow, through your own tunnels fast; your base (in your colour) fills up
+your energy and shields.
+
+                 Player 1          Player 2
+  Up             Cursor Up         W
+  Down           Cursor Down       S
+  Left           Cursor Left       A
+  Right          Cursor Right      D
+  Fire           Right Shift       Ctrl
+
+  Esc            end the game, and back to the menu
+
+The keys, the window size and full screen are set in Settings on the
+menu; they are kept in the drawer's Tunneler.prefs.
+
+Against the computer, from a Shell (0 is player 1, 1 player 2):
+  Tunneler -ai 1
+Other options: -w <width> -h <height> --fullscreen
+
+The keys every AmiCradle game has on Right Amiga (GFOpenUp's SDL2.module):
+Right Amiga + F window or full screen, + P pause, + Q quit, + M free the
+mouse pointer, + S a screenshot in the drawer's Screenshots, and Help
+shows this file.
