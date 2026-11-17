@@ -27,7 +27,7 @@ CFLAGS  = -noixemul $(OPT) $(CPU) -fgnu89-inline -D__amigaos__ -DHAVE_CONFIG_H \
           -I$(TU)/src -I$(SDL2KIT)/include
 LDFLAGS = -noixemul $(CPU)
 # libSDL.a is sdl12-compat with SDL 2's own members inside
-LIBS    = -L$(SDL2KIT)/lib -lSDL -lSDL2 -lm
+LIBS    = -L$(SDL2KIT)/lib -lSDL -lm
 
 BUILD   = build/amigaos
 OBJDIR  = $(BUILD)/obj
